@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import 'package:flutter/material.dart';
+import 'package:string_to_hex/string_to_hex.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'rgb.dart';
@@ -75,8 +76,7 @@ class _TerminalState extends State<Terminal> {
         style: new TextStyle(
             fontSize: 15.0,
             color: const Color(0xFFf2f2f2),
-            fontFamily:
-                "Cousine"), //Theme.of(context).textTheme.body1.copyWith(fontSize: 10),
+            fontFamily: "Cousine"), //Theme.of(context).textTheme.body1.copyWith(fontSize: 10),
         children: spans,
       ),
     );
@@ -136,14 +136,12 @@ class _TerminalState extends State<Terminal> {
       if (startIndex > spanBoundary) {
         spans.add(TextSpan(
             text: text.substring(spanBoundary, startIndex),
-            style: TextStyle(
-                color: currentColor, backgroundColor: currentBackgroundColor)));
+            style: TextStyle(color: currentColor, backgroundColor: currentBackgroundColor)));
       }
       if (startIndex == -1) {
         spans.add(TextSpan(
             text: text.substring(spanBoundary),
-            style: TextStyle(
-                color: currentColor, backgroundColor: currentBackgroundColor)));
+            style: TextStyle(color: currentColor, backgroundColor: currentBackgroundColor)));
         return spans;
       }
       Match reMatch = re.firstMatch(text.substring(spanBoundary));
@@ -167,26 +165,17 @@ class _TerminalState extends State<Terminal> {
               colorCode = args[2];
               if (args[0] == '38') {
                 currentColor = Color.fromRGBO(
-                    rgb[int.parse(colorCode)][0],
-                    rgb[int.parse(colorCode)][1],
-                    rgb[int.parse(colorCode)][2],
-                    1.0);
+                    rgb[int.parse(colorCode)][0], rgb[int.parse(colorCode)][1], rgb[int.parse(colorCode)][2], 1.0);
               } else if (args[0] == '48') {
                 currentBackgroundColor = Color.fromRGBO(
-                    rgb[int.parse(colorCode)][0],
-                    rgb[int.parse(colorCode)][1],
-                    rgb[int.parse(colorCode)][2],
-                    1.0);
+                    rgb[int.parse(colorCode)][0], rgb[int.parse(colorCode)][1], rgb[int.parse(colorCode)][2], 1.0);
               }
-            } else if (int.parse(colorCode) >= 30 &&
-                int.parse(colorCode) < 38) {
+            } else if (int.parse(colorCode) >= 30 && int.parse(colorCode) < 38) {
               currentColorCode = colorCode;
               currentColor = getANSI(currentColorCode, currentShade);
-            } else if (int.parse(colorCode) >= 40 &&
-                int.parse(colorCode) < 48) {
+            } else if (int.parse(colorCode) >= 40 && int.parse(colorCode) < 48) {
               currentBackgroundColorCode = colorCode;
-              currentBackgroundColor =
-                  getANSI(currentBackgroundColorCode, currentShade);
+              currentBackgroundColor = getANSI(currentBackgroundColorCode, currentShade);
             }
             break;
         }
@@ -240,56 +229,58 @@ class _TerminalState extends State<Terminal> {
                   yourmotherisbadstreamstate = true;
                 }
                 children = <Widget>[
-                  Container(
-                      height: 0,
-                      color: Color(0xff292929),
-                      child: Row(children: [])),
+                  Container(height: 0, color: Color(0xff2229), child: Row(children: [])),
                   new Expanded(
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
+                      padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
                       scrollDirection: Axis.vertical,
-                      child: new Container(
-                        child: _myWidget(context, output),
-                        alignment: Alignment.topLeft,
-                      ),
-                    ),
-                  ),
-                  new Padding(
-                    child: RawKeyboardListener(
-                      focusNode: FocusNode(),
-                      onKey: (event) {
-                        if (event.runtimeType.toString() == 'RawKeyDownEvent' &&
-                            event.logicalKey.keyId == 4295426088) {
-                          process.stdin.writeln(myController.text);
-                          pressEnter();
-                          myController.clear();
-                        }
-                      },
-                      child: new TextFormField(
-                        controller: myController,
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          color: const Color(0xFFf2f2f2),
-                          fontFamily: "Cousine",
-                        ),
-                        decoration: InputDecoration.collapsed(
-                          hintText: ps1(),
-                          hintStyle: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              color: const Color(0xFFf2f2f2)),
-                        ),
-                        autocorrect: false,
-                        autofocus: true,
-                        minLines: null,
-                        maxLines: null,
+                      child: Column(
+                        children: [
+                          new Container(
+                            child: _myWidget(context, output),
+                            alignment: Alignment.topLeft,
+                          ),
+                          new Padding(
+                            child: RawKeyboardListener(
+                              focusNode: FocusNode(),
+                              onKey: (event) {
+                                if (event.runtimeType.toString() == 'RawKeyDownEvent' &&
+                                    event.logicalKey.keyId == 4295426088) {
+                                  process.stdin.writeln(myController.text);
+                                  pressEnter();
+                                  myController.clear();
+                                }
+                              },
+                              child: new TextFormField(
+                                controller: myController,
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  color: const Color(0xFFf2f2f2),
+                                  fontFamily: "Cousine",
+                                ),
+                                decoration: InputDecoration.collapsed(
+                                  hintText: ps1(),
+                                  hintStyle: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    color: Color(StringToHex.toColor(ps1())),
+                                  ),
+                                ),
+                                autocorrect: false,
+                                autofocus: true,
+                                minLines: null,
+                                maxLines: null,
 
-                        //initialValue: "debug_shell \$",
-                        cursorColor: const Color(0xFFf2f2f2),
-                        cursorRadius: Radius.circular(0.0),
-                        cursorWidth: 10.0,
+                                //initialValue: "debug_shell \$",
+                                cursorColor: const Color(0xFFf2f2f2),
+                                cursorRadius: Radius.circular(0.0),
+                                cursorWidth: 10.0,
+                              ),
+                            ),
+                            padding: const EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
+                          ),
+                        ],
                       ),
                     ),
-                    padding: const EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
                   ),
                 ];
               } else if (snapshot.hasError) {
