@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 import 'package:flutter/material.dart';
-import 'package:string_to_hex/string_to_hex.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'rgb.dart';
@@ -260,10 +259,7 @@ class _TerminalState extends State<Terminal> {
                                 ),
                                 decoration: InputDecoration.collapsed(
                                   hintText: ps1(),
-                                  hintStyle: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    color: Color(StringToHex.toColor(ps1())),
-                                  ),
+                                  hintStyle: TextStyle(fontWeight: FontWeight.w900, color: const Color(0xFFf2f2f2)),
                                 ),
                                 autocorrect: false,
                                 autofocus: true,
